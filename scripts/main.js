@@ -3,13 +3,22 @@
 
 
 // Essentials
+	// Cake
 let canvas = document.getElementById('cake');
 let c = canvas.getContext("2d");
         
-canvas_width = 1024;
-canvas_height = 576;
+canvas_width = window.innerWidth;
+canvas_height = window.innerHeight;
 canvas.width = canvas_width;
 canvas.height = canvas_height;
+
+	// Conveyer
+let conveyer = document.getElementById('conveyer');
+let con = conveyer.getContext("2d");
+
+conveyer.width = 1000;
+conveyer.height = 100;
+
 
 let effects = {obj: []};
 
@@ -82,8 +91,6 @@ const confetti = { //{position, action, color}, size
 			if (Math.abs(self.velocity.y) > 0.1) self.velocity.y *= 0.9;
 			else self.velocity.y = 0;
 		}
-
-		if (self.velocity.x + self.velocity.y === 0) self.isDestroyed = true;
 	},
 	color: 'red'
 }
@@ -149,6 +156,31 @@ const bdayText = {
 }
 bdayText.sprite.src = 'images/bdayText.png';
 
+if (canvas_width <= bdayText.finalSize.width) {
+	bdayText.finalSize = {
+		width: canvas_width - 20,
+		height: canvas_width - 20
+	}
+}
+
+
+
+
+
+
+
+	// Card
+const bdayText2 = {
+	position: {
+		x: canvas_width,
+		y: 90
+	}
+}
+
+let scramble = false;
+let scrambleCD = 0;
+
+
 
 
 
@@ -185,15 +217,30 @@ function animate() {
 	requestAnimationFrame(animate);
 	c.clearRect(0, 0, canvas_width, canvas_height);
 
+	for (let i in effects.obj) effects.obj[i].update();
+
 	if (!cake.isDestroyed) drawCake();
 	if (!bdayText.isDestroyed) drawText();
 	normalizeCake(1);
 	normalizeText(20);
 
-	for (let i in effects.obj) effects.obj[i].update();
+
+	if (document.querySelector('#card').style.display == 'none') return;
+
+	// Card
+	moveConveyer();
+	moveGallery(document.getElementsByClassName('gallery')[0], 1);
+	moveGallery(document.getElementsByClassName('gallery')[1], -1);
+
+	if (scramble) {
+		if (!scrambleCD) {
+			scrambleLetter();
+			scrambleCD = 2;
+		}
+		else scrambleCD--;
+	}
 }
 animate();
-drawCake();
 
 
 
@@ -278,20 +325,6 @@ function normalizeText(value) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function confettiBoom(position, strength) {
 	let colors = ['red', 'orange', 'yellow', 'lime', 'blue', 'purple', 'pink', 'white'];
 
@@ -331,6 +364,83 @@ function rectangularCollision(object1, object2) {
 	)
 }
 
+
+function moveConveyer() {
+	con.clearRect(0, 0, 1000, 100);
+
+	// Draw
+	con.fillStyle = 'white';
+	con.font = 'bold italic 100px Winkle';
+	con.textAllign = 'center';
+	con.fillText('!!!!! HAPPY BIRTHDAY !!!!!', bdayText2.position.x, bdayText2.position.y);
+
+	// Move
+	bdayText2.position.x -= 5;
+	if (bdayText2.position.x < -canvas_width) bdayText2.position.x = canvas_width;
+}
+
+function moveGallery(gallery, direction) {
+	gallery.scrollLeft += 2 * direction;
+
+	let len = gallery.getElementsByTagName('img').length;
+	let max_length = len * 200 + (len-1) * 10 - 1000;
+
+
+		// Right to Left
+	if (gallery.scrollLeft == max_length && direction == 1) {
+			// Add
+		let el = document.createElement('img');
+		el.src = gallery.getElementsByTagName('img')[0].src;
+		gallery.appendChild(el);
+
+			// Remove
+		gallery.getElementsByTagName('img')[0].remove();
+		gallery.scrollLeft -= 210;
+	}
+
+		// Left to Right
+	if (gallery.scrollLeft == 0 && direction == -1) {
+			// Add
+		let el = document.createElement('img');
+		el.src = gallery.getElementsByTagName('img')[len-1].src;
+		gallery.insertBefore(el, gallery.getElementsByTagName('img')[0]);
+
+			// Remove
+		gallery.getElementsByTagName('img')[len].remove();
+		gallery.scrollLeft += 210;
+	}
+}
+
+function scrambleLetter() {
+	let letter = document.getElementById('letter').textContent;
+    let newLetter = '';
+    letter = letter.split('');
+
+    while (letter.length > 0) {
+      newLetter +=  letter.splice(letter.length * Math.random() << 0, 1);
+    }
+
+    document.getElementById('letter').innerHTML = newLetter;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Input Handling
 canvas.addEventListener('click', (e) => {
 	let mouse = {
@@ -356,4 +466,24 @@ yay.addEventListener('ended', () => {
 bgm.addEventListener('ended', () => {
 	bgm.currentTime = 0;
 	bgm.play();
+})
+
+
+	// Godzilla Roar
+let imgs = document.querySelector('#card').getElementsByTagName('img');
+
+for (let i=0; i<imgs.length; i++) {
+	imgs[i].addEventListener('click', (e) => {
+		// console.log(imgs[i].src)
+		if (imgs[i].src != "file:///D:/Code%20Stuff/Luan's%20Birthday%20Special%202024/images/placeholder.png") return;
+		let roar = new Audio("audio/Godzilla_Heisei_SFX.wav");
+		roar.play();
+	})
+}
+
+
+	// Card
+document.getElementById('letter').addEventListener('click', () => {
+	scramble = false;
+	document.getElementById('letter').innerHTML = "hi luan I'm wishing you a spectacular 17th birthday you're so old did you know in California there's a 17 mile road crossing a beach called pebble beach ⛱️  this is the 2nd time I've witnessed your birthday i hope the cake gets better every year than the last and I, without a doubt, will be there for the next birthday.<br><br>your birthday means alot to me i might as well buy a cupcake and light my own candle and be delusional but besides that i hope you enjoy today it's a special occasion. xoxo who else other than s.g gayfagus"
 })

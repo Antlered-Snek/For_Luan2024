@@ -1,10 +1,23 @@
 
 
 
+/* Essentials */
+@import url('https://fonts.cdnfonts.com/css/winkle');
+
+:root {
+	--main-color: #f5dde0;
+	--secondary-color: #eabce3;
+}
+
+
+
+
 
 body {
+	position: relative;
 	background-color: black;
-	overflow: hidden;
+	user-select: none;
+	/*overflow: hidden;*/
 }
 
 #game {
@@ -13,12 +26,10 @@ body {
 	transform: translateX(-50%);
 	background-color: black;
 	display: block;
-	width: 1024px;
-	height: 700px;
 }
 
 #cake {
-	position: absolute;
+	position: relative;
 	left: 50%;
 	transform: translateX(-50%);
 }
@@ -27,8 +38,186 @@ body {
 	position: relative;
 	left: 50%;
 	transform: translateX(-50%);
-	background-color: pink;
-	display: none;
+	background-color: var(--main-color);
+	/*display: none;*/
 	width: 1000px;
-	height: 1000px;
+	height: 2000px;
+}
+
+
+
+
+
+/* Card */
+
+	/* Conveyer */
+#razzmatazz {
+	width: 1000px;
+	height: 100px;
+	object-fit: cover;
+}
+
+#conveyer {
+	width: 1000px;
+	height: 100px;
+
+	background-color: #d0637c;
+}
+
+#conveyer-overlay {
+	position: absolute;
+	left: 0%;
+	width: 1000px;
+	height: 100px;
+	object-fit: cover;
+}
+
+
+
+
+
+	/* Intro */
+#intro {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+
+	height: 500px;
+	border: 10px dashed var(--secondary-color);
+
+	margin-bottom: 10px;
+}
+
+#intro span:first-child {
+	margin-right: 50px;
+}
+
+#letter {
+	position: relative;
+	left: 50px;
+	width: 500px;
+	height: 250px;
+	font-size: 20px;
+	font-style: italic;
+}
+
+
+#pfp {
+	position: relative;
+	width: 300px;
+	height: 300px;
+
+	rotate: 10deg;
+
+	animation-name: bounce;
+	animation-duration: 5s;
+	animation-timing-function: ease-in-out;
+	animation-iteration-count: infinite;
+}
+
+#pfp img:first-child {
+	position: absolute;
+	width: 300px;
+	height: auto;
+}
+
+#pfp img:nth-child(2) {
+	position: absolute;
+	width: 350px;
+	height: auto;
+
+	top: -30%;
+	left: -10%;
+}
+
+#ugay {
+	position: absolute;
+	width: 150px;
+	top: 29%;
+	left: 30%;
+}
+
+
+
+
+
+#placeholder {
+	width: 100px;
+	height: 100px;
+}
+
+
+/* Ornaments */
+.buffer {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	flex-wrap: wrap;
+
+	background-color: black;
+	width: 1000px;
+}
+
+.buffer img {
+	height: 73.3px;
+}
+
+
+
+/* Scrolling Imgs */
+.gallery {
+	display: flex;
+	gap: 10px;
+	overflow: scroll;
+}
+
+.gallery::-webkit-scrollbar {
+	display: none;
+}
+
+.gallery img {
+	height: 200px;
+	transition: filter 0.2s ease;
+}
+
+.gallery img:hover {
+	filter: contrast(1000%) blur(2px);
+	filter: invert(100%);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@keyframes bounce {
+	0%		{top: 0px;}
+	25%		{top: -20px;}
+	75%		{top: 20px;}
+	100%	{top: 0px;}
+}
+
+
+
+
+
+
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  [class*="col-"] {
+    width: 100%;
+  }
 }
