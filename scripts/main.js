@@ -261,25 +261,6 @@ function animate() {
 			tap.play();
 		}
 	}
-
-		// Godzilla Roar
-	imgs = document.querySelector('#card').getElementsByTagName('img');
-
-	for (let i=0; i<imgs.length; i++) {
-		imgs[i].onclick = (e) => {
-			// console.log(imgs[i].src)
-			if (imgs[i].src != "file:///D:/Code%20Stuff/Luan's%20Birthday%20Special%202024/images/placeholder.png" && imgs[i].src != "file:///D:/Code%20Stuff/Luan's%20Birthday%20Special%202024/images/godzilla.png") return;
-			let roar = new Audio("audio/Godzilla_Heisei_SFX.wav");
-			roar.play();
-
-				// Achievement
-			if (achievements.godzilla) {
-				achievements.godzilla = false;
-				achievementsLeft--;
-				popupMessage('Fearsome Godzilla Has Evolved RAAAHHH', 'images/achievement_godzilla.gif');
-			}
-		}
-	}
 }
 animate();
 popupMessage('Eliminate the cake (:', 'images/popup.png', "<u>Complete the Task</u>", false);
@@ -579,6 +560,22 @@ document.getElementById('ugay').addEventListener('click', () => {
 		popupMessage('Be who you are For your Pride Don’t Hide', 'images/achievement_bigGay.gif');
 	}
 })
+
+document.getElementById('godzilla').addEventListener('click', () => {
+	let roar = new Audio("audio/Godzilla_Heisei_SFX.wav");
+	roar.play();
+
+		// Achievement
+	if (achievements.godzilla) {
+		achievements.godzilla = false;
+		achievementsLeft--;
+		popupMessage('Fearsome Godzilla Has Evolved RAAAHHH', 'images/achievement_godzilla.gif');
+	}
+})
+
+
+
+
 
 document.getElementById('ugay').addEventListener('mouseover', () => {
 	let tap = new Audio("audio/tap.mp3");
