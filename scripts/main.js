@@ -21,6 +21,7 @@ conveyer.height = 100;
 
 
 let effects = {obj: []};
+let imgs;
 
 
 
@@ -172,14 +173,13 @@ if (canvas_width <= bdayText.finalSize.width) {
 	// Card
 const bdayText2 = {
 	position: {
-		x: canvas_width,
+		x: canvas_width*0.8,
 		y: 90
 	}
 }
 
-let scramble = false;
-let scrambleCD = 0;
-
+// let scramble = false;
+// let scrambleCD = 0;
 
 
 
@@ -192,6 +192,19 @@ const bgm = new Audio("audio/bgm.mp3");
 
 
 
+
+
+// Achievements
+let achievementsLeft = 6;
+let achievements = {
+	clickTheCake: true,
+	destroyLove: true,
+	bigGay: true,
+	godzilla: true,
+	california: true,
+	faggus: true
+}
+let popupIsAnimating = false;
 
 
 
@@ -232,15 +245,46 @@ function animate() {
 	moveGallery(document.getElementsByClassName('gallery')[0], 1);
 	moveGallery(document.getElementsByClassName('gallery')[1], -1);
 
-	if (scramble) {
-		if (!scrambleCD) {
-			scrambleLetter();
-			scrambleCD = 2;
+	// if (scramble) {
+	// 	if (!scrambleCD) {
+	// 		scrambleLetter();
+	// 		scrambleCD = 2;
+	// 	}
+	// 	else scrambleCD--;
+	// }
+
+		// Click
+	imgs = document.querySelectorAll('.gallery img');
+	for (let i=0; i<imgs.length; i++) {
+		imgs[i].onmouseover = (e) => {
+			let tap = new Audio("audio/tap.mp3");
+			tap.play();
 		}
-		else scrambleCD--;
+	}
+
+		// Godzilla Roar
+	imgs = document.querySelector('#card').getElementsByTagName('img');
+
+	for (let i=0; i<imgs.length; i++) {
+		imgs[i].onclick = (e) => {
+			// console.log(imgs[i].src)
+			if (imgs[i].src != "file:///D:/Code%20Stuff/Luan's%20Birthday%20Special%202024/images/placeholder.png" && imgs[i].src != "file:///D:/Code%20Stuff/Luan's%20Birthday%20Special%202024/images/godzilla.png") return;
+			let roar = new Audio("audio/Godzilla_Heisei_SFX.wav");
+			roar.play();
+
+				// Achievement
+			if (achievements.godzilla) {
+				achievements.godzilla = false;
+				achievementsLeft--;
+				popupMessage('Fearsome Godzilla Has Evolved RAAAHHH', 'images/achievement_godzilla.gif');
+			}
+		}
 	}
 }
 animate();
+popupMessage('Eliminate the cake (:', 'images/popup.png', "<u>Complete the Task</u>", false);
+
+
 
 
 
@@ -370,13 +414,13 @@ function moveConveyer() {
 
 	// Draw
 	con.fillStyle = 'white';
-	con.font = 'bold italic 100px Winkle';
+	con.font = 'bold 100px Winkle';
 	con.textAllign = 'center';
 	con.fillText('!!!!! HAPPY BIRTHDAY !!!!!', bdayText2.position.x, bdayText2.position.y);
 
 	// Move
 	bdayText2.position.x -= 5;
-	if (bdayText2.position.x < -canvas_width) bdayText2.position.x = canvas_width;
+	if (bdayText2.position.x < -canvas_width*0.8) bdayText2.position.x = canvas_width*0.8;
 }
 
 function moveGallery(gallery, direction) {
@@ -411,16 +455,47 @@ function moveGallery(gallery, direction) {
 	}
 }
 
-function scrambleLetter() {
-	let letter = document.getElementById('letter').textContent;
-    let newLetter = '';
-    letter = letter.split('');
+// function scrambleLetter() {
+// 	let letter = document.getElementById('letter').textContent;
+//     let newLetter = '';
+//     letter = letter.split('');
 
-    while (letter.length > 0) {
-      newLetter +=  letter.splice(letter.length * Math.random() << 0, 1);
-    }
+//     while (letter.length > 0) {
+//       newLetter +=  letter.splice(letter.length * Math.random() << 0, 1);
+//     }
 
-    document.getElementById('letter').innerHTML = newLetter;
+//     document.getElementById('letter').innerHTML = newLetter;
+// }
+
+function popupMessage(message, src, name="<u>Achievement Unlocked!</u>", showAchievements=true) {
+	let popup = document.getElementById('popup');
+
+	popup.classList.toggle('pop');
+	if (popupIsAnimating) {
+		void popup.offsetWidth;
+		popup.classList.toggle('pop');
+	}
+
+
+	popup.getElementsByTagName('img')[0].src = src;
+	popup.getElementsByTagName('h2')[0].innerHTML = name;
+	popup.getElementsByTagName('p')[0].innerHTML = message;
+	popup.getElementsByTagName('h5')[0].innerHTML = `Achievements Left : ${achievementsLeft}`;
+
+	if (!achievementsLeft) {
+		popup.getElementsByTagName('h5')[0].innerHTML = 'All Achievements Unlocked!';
+		let sfx = new Audio('audio/achievementsAllUnlocked.mp3');
+		sfx.play();
+	}
+	else if (name == "<u>Achievement Unlocked!</u>") {
+		let sfx = new Audio('audio/achievement_SFX.mp3');
+		sfx.play();
+	}
+
+	if (showAchievements) popup.getElementsByTagName('h5')[0].style.display = "block";
+	else popup.getElementsByTagName('h5')[0].style.display = "none";
+
+	popupIsAnimating = true;
 }
 
 
@@ -459,8 +534,15 @@ canvas.addEventListener('click', (e) => {
 
 yay.addEventListener('ended', () => {
 	bgm.play();
-	document.querySelector('body').style.overflow = 'scroll';
+	document.querySelector('body').style.overflowY = 'visible';
 	document.querySelector('#card').style.display = 'block';
+
+		// Achievement
+	if (achievements.clickTheCake) {
+		achievements.clickTheCake = false;
+		achievementsLeft--;
+		popupMessage('HAPPY BIRTHDAYY FAGGOT!!!<3<3<3', 'images/achievement_clickTheCake.gif');
+	}
 })
 
 bgm.addEventListener('ended', () => {
@@ -469,21 +551,126 @@ bgm.addEventListener('ended', () => {
 })
 
 
-	// Godzilla Roar
-let imgs = document.querySelector('#card').getElementsByTagName('img');
 
-for (let i=0; i<imgs.length; i++) {
-	imgs[i].addEventListener('click', (e) => {
-		// console.log(imgs[i].src)
-		if (imgs[i].src != "file:///D:/Code%20Stuff/Luan's%20Birthday%20Special%202024/images/placeholder.png") return;
-		let roar = new Audio("audio/Godzilla_Heisei_SFX.wav");
-		roar.play();
+
+
+	// Card
+document.addEventListener('mousedown', (e) => {
+	if (e.which == 2) {
+		e.returnValue = false;
+    	e.cancelBubble = true;
+     	return false;
+	}
+})
+
+// document.getElementById('letter').addEventListener('click', () => {
+// 	scramble = false;
+// 	document.getElementById('letter').innerHTML = "hi luan I'm wishing you a spectacular 17th birthday you're so old did you know in California there's a 17 mile road crossing a beach called pebble beach ⛱️  this is the 2nd time I've witnessed your birthday i hope the cake gets better every year than the last and I, without a doubt, will be there for the next birthday.<br><br>your birthday means alot to me i might as well buy a cupcake and light my own candle and be delusional but besides that i hope you enjoy today it's a special occasion. xoxo who else other than s.g gayfagus"
+// })
+
+document.getElementById('ugay').addEventListener('click', () => {
+	let gay = new Audio("audio/gay-echo.mp3");
+	gay.play();
+
+		// Achievement
+	if (achievements.bigGay) {
+		achievements.bigGay = false;
+		achievementsLeft--;
+		popupMessage('Be who you are For your Pride Don’t Hide', 'images/achievement_bigGay.gif');
+	}
+})
+
+document.getElementById('ugay').addEventListener('mouseover', () => {
+	let tap = new Audio("audio/tap.mp3");
+	tap.play();
+})
+
+document.getElementById('pfp').addEventListener('mouseover', () => {
+	let tap = new Audio("audio/tap.mp3");
+	tap.play();
+})
+
+document.getElementById('godzilla').addEventListener('mouseover', () => {
+	let tap = new Audio("audio/tap.mp3");
+	tap.play();
+})
+
+
+
+
+
+	// Links
+for (let i=0; i<2; i++) {
+	document.getElementsByTagName('a')[i].addEventListener('click', (e) => {
+		if (!i) {
+				// Achievement
+			if (achievements.california) {
+				achievements.california = false;
+				achievementsLeft--;
+				popupMessage("California's Top Yaoi Expert", 'images/achievement_california.gif');
+			}
+		}
+		else {
+				// Achievement
+			if (achievements.faggus) {
+				achievements.faggus = false;
+				achievementsLeft--;
+				popupMessage("Shion's Number 1 Faggus", 'images/achievement_faggus.gif');
+			}
+		}
 	})
 }
 
 
-	// Card
-document.getElementById('letter').addEventListener('click', () => {
-	scramble = false;
-	document.getElementById('letter').innerHTML = "hi luan I'm wishing you a spectacular 17th birthday you're so old did you know in California there's a 17 mile road crossing a beach called pebble beach ⛱️  this is the 2nd time I've witnessed your birthday i hope the cake gets better every year than the last and I, without a doubt, will be there for the next birthday.<br><br>your birthday means alot to me i might as well buy a cupcake and light my own candle and be delusional but besides that i hope you enjoy today it's a special occasion. xoxo who else other than s.g gayfagus"
+
+
+
+
+
+
+
+
+document.getElementById('pfp').addEventListener('click', (e) => {
+	let boom = new Audio("audio/explosion.mp3");
+	boom.play();
+
+	boom = document.createElement('img');
+	boom.src = 'images/explosion.gif';
+	boom.style.position = 'fixed';
+	boom.style.height = '100px';
+	boom.style.left = `${e.clientX - document.getElementById('intro').getBoundingClientRect().left - 40}px`;
+	boom.style.top = `${e.clientY - document.getElementById('intro').getBoundingClientRect().top + 150}px`;
+	document.getElementById('intro').appendChild(boom);
+
+	setTimeout( () => {
+		boom.remove();
+	}, 800)
+
+		// Achievement
+	if (achievements.destroyLove) {
+		achievements.destroyLove = false;
+		achievementsLeft--;
+		popupMessage('Shuan ForNEVER XXXX Cringee', "images//achievement_destroyLove.gif");
+	}
+})
+
+
+
+
+
+
+
+document.getElementsByClassName('pop')[0].addEventListener('animationend', () => {
+	document.getElementById('popup').classList.toggle('pop');
+	popupIsAnimating = false;
+})
+
+document.addEventListener('visibilitychange', (e) => {
+	let popup = document.getElementById('popup');
+
+	if (popupIsAnimating) {
+		popup.classList.toggle('pop');
+		void popup.offsetWidth;
+		popup.classList.toggle('pop');
+	}
 })

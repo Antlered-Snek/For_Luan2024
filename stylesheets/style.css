@@ -17,7 +17,7 @@ body {
 	position: relative;
 	background-color: black;
 	user-select: none;
-	/*overflow: hidden;*/
+	overflow: hidden;
 }
 
 #game {
@@ -39,7 +39,7 @@ body {
 	left: 50%;
 	transform: translateX(-50%);
 	background-color: var(--main-color);
-	/*display: none;*/
+	display: none;
 	width: 1000px;
 	height: 2000px;
 }
@@ -51,7 +51,7 @@ body {
 /* Card */
 
 	/* Conveyer */
-#razzmatazz {
+.razzmatazz {
 	width: 1000px;
 	height: 100px;
 	object-fit: cover;
@@ -114,7 +114,14 @@ body {
 	animation-duration: 5s;
 	animation-timing-function: ease-in-out;
 	animation-iteration-count: infinite;
+
+	transition: transform 0.1s ease-in;
 }
+
+#pfp:hover {
+	transform: scale(105%);
+}
+
 
 #pfp img:first-child {
 	position: absolute;
@@ -131,21 +138,40 @@ body {
 	left: -10%;
 }
 
+
 #ugay {
 	position: absolute;
 	width: 150px;
 	top: 29%;
 	left: 30%;
+	transition: width 0.1s ease-in, top 0.1s ease-in, left 0.1s ease-in;
+}
+
+#ugay:hover {
+	width: 160px;
+	top: 28.5%;
+	left: 29.5%;
 }
 
 
 
-
-
-#placeholder {
+#godzilla {
+	position: absolute;
 	width: 100px;
-	height: 100px;
+	top: 12%;
+	left: 14%;
+	transition: width 0.1s ease-in, top 0.1s ease-in, left 0.1s ease-in;
 }
+
+#godzilla:hover {
+	width: 110px;
+	top: 11.5%;
+	left: 13.5%;
+}
+
+
+
+
 
 
 /* Ornaments */
@@ -165,11 +191,22 @@ body {
 
 
 
+
+
+
 /* Scrolling Imgs */
+.gallery-container {
+	height: 220px;
+}
+
 .gallery {
+	position: relative;
+	top: 10px;
 	display: flex;
 	gap: 10px;
+
 	overflow: scroll;
+	touch-action: none;
 }
 
 .gallery::-webkit-scrollbar {
@@ -177,17 +214,92 @@ body {
 }
 
 .gallery img {
+	position: relative;
 	height: 200px;
-	transition: filter 0.2s ease;
+
+	transition: height 0.2s ease, top 0.2s ease-in, left 0.2s ease-in;
 }
 
 .gallery img:hover {
-	filter: contrast(1000%) blur(2px);
-	filter: invert(100%);
+	top: 0px;
+	height: 220px;
 }
 
 
 
+
+
+
+
+
+/* Slut */
+#slut {
+	width: 1000px;
+	height: 700px;
+}
+
+#slut img {
+	width: 1000px;
+	height: 300px;
+}
+
+
+
+
+
+
+
+
+
+/* Popup */
+#popup {
+	position: fixed;
+	right: 0px;
+	top: -100%;
+
+	width: 500px;
+	height: 100px;
+	border: 8px solid var(--secondary-color);
+	background-color: black;
+	color: white;
+	font-family: Helvetica;
+}
+
+#popup img {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+
+	width: 80px;
+	border-radius: 10px;
+}
+
+#popup h2 {
+	position: relative;
+	top: -5px;
+	left: 110px;
+	color: var(--main-color);
+}
+
+#popup p {
+	position: relative;
+	top: -18px;
+	left: 130px;
+}
+
+#popup h5 {
+	position: relative;
+	top: -30px;
+	left: 320px;
+}
+
+.pop {
+	animation-name: appear;
+
+	animation-duration: 8s;
+	animation-timing-function: ease-out;
+	animation-iteration-count: 1;
+}
 
 
 
@@ -207,6 +319,16 @@ body {
 	25%		{top: -20px;}
 	75%		{top: 20px;}
 	100%	{top: 0px;}
+}
+
+@keyframes appear {
+	0%		{top: -100%;}
+	10%		{top: 2%;}
+	13%		{top: -1%;}
+	16%		{top: 0%;}
+	75%		{top: 0%;}
+	80%		{top: 2%;}
+	100%	{top: -100%;}
 }
 
 
